@@ -8,6 +8,6 @@ COPY nginx.conf /etc/nginx/conf.d/default.conf
 # COPY html /var/www/html
 # COPY css /var/www/html/css
 # COPY img /var/www/html/img
-RUN chown -R nginx:nginx /var/www/html
+# RUN chown -R nginx:nginx /var/www/html
 
 EXPOSE 80
