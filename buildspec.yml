@@ -17,9 +17,17 @@ phases:
     commands:
       - echo Logging in to Amazon ECR...
       - $(aws ecr get-login --no-include-email --region $AWS_DEFAULT_REGION)
+      - echo $CODEBUILD_RESOLVED_SOURCE_VERSION
       - CODEBUILD_RESOLVED_SOURCE_VERSION="${CODEBUILD_RESOLVED_SOURCE_VERSION:-$IMAGE_TAG}"
+      - echo $CODEBUILD_RESOLVED_SOURCE_VERSION
       - IMAGE_TAG=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
+      - echo $IMAGE_TAG
+      - echo $AWS_ACCOUNT_ID
+      - echo $AWS_DEFAULT_REGION
+      - echo $IMAGE_REPO_NAME
+      - echo $IMAGE_TAG
       - IMAGE_URI="$AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$IMAGE_TAG"
+      - echo $IMAGE_URI
   build:
     commands:
       - echo Build started on `date`
@@ -29,7 +37,7 @@ phases:
     commands:
       - bash -c "if [ /"$CODEBUILD_BUILD_SUCCEEDING/" == /"0/" ]; then exit 1; fi"
       - echo Build stage successfully completed on `date`
-      - echo Pushing the Docker image...
+      - echo Pushing the Docker image... $IMAGE_URI
       - docker push $IMAGE_URI
       - printf '[{"name":"nginx","imageUri":"%s"}]' "$IMAGE_URI" > images.json
 artifacts:
